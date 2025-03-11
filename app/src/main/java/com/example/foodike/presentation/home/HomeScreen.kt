@@ -26,6 +26,7 @@
 
 package com.example.foodike.presentation.home
 
+import TimePickerField
 import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -70,6 +71,7 @@ import com.example.foodike.R
 import com.example.foodike.domain.model.Advertisement
 import com.example.foodike.domain.model.FoodItem
 import com.example.foodike.domain.model.Restaurant
+import com.example.foodike.presentation.components.DatePickerField
 import com.example.foodike.presentation.components.RestaurantCard
 import com.example.foodike.presentation.components.SearchBar
 import com.example.foodike.presentation.home.components.AdSection
@@ -127,6 +129,17 @@ fun Home(
             AdSection(homeScreenState.adsList, navController)
             Spacer(modifier = Modifier.height(16.dp))
         }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            DatePickerField()
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            TimePickerField()
+        }
+        
 //        item {
 //            RecommendedSection(homeScreenState.foodList)
 //            Spacer(modifier = Modifier.height(16.dp))
