@@ -29,7 +29,7 @@ package com.example.foodike.presentation.home
 import TimePickerField
 import android.app.Activity
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -40,14 +40,17 @@ import androidx.compose.material.AppBarDefaults.ContentPadding
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -72,8 +75,10 @@ import com.example.foodike.domain.model.Advertisement
 import com.example.foodike.domain.model.FoodItem
 import com.example.foodike.domain.model.Restaurant
 import com.example.foodike.presentation.components.DatePickerField
+import com.example.foodike.presentation.components.DragDropList
 import com.example.foodike.presentation.components.RestaurantCard
 import com.example.foodike.presentation.components.SearchBar
+import com.example.foodike.presentation.components.move
 import com.example.foodike.presentation.home.components.AdSection
 import com.example.foodike.presentation.home.components.ChipBar
 import com.example.foodike.presentation.home.components.FavouriteSection
@@ -84,6 +89,7 @@ import com.example.foodike.presentation.home.components.RecommendedSection
 import com.example.foodike.presentation.home.components.ThankYouSection
 import com.example.foodike.presentation.home.components.TopSection
 import com.example.foodike.presentation.util.Screen
+import com.plcoding.composedraganddrop.DragAndDropBoxes
 import java.util.*
 
 
@@ -139,6 +145,41 @@ fun Home(
             Spacer(modifier = Modifier.height(16.dp))
             TimePickerField()
         }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+
+           /// DragAndDropBoxes()
+        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(color = Color.LightGray) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            modifier = Modifier
+
+                                .background(MaterialTheme.colors.primary),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Drag & Drop List",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+
+                        DragDropList(
+                            items = ReorderItem,
+                            onMove = { fromIndex, toIndex -> ReorderItem.move(fromIndex, toIndex) }
+                        )
+                    }
+                }
+
+        }
         
 //        item {
 //            RecommendedSection(homeScreenState.foodList)
@@ -189,5 +230,26 @@ fun Home(
 
 
 
-
+val ReorderItem = listOf(
+    "Item 1",
+    "Item 2",
+    "Item 3",
+    "Item 4",
+    "Item 5",
+    "Item 6",
+    "Item 7",
+    "Item 8",
+    "Item 9",
+    "Item 10",
+    "Item 11",
+    "Item 12",
+    "Item 13",
+    "Item 14",
+    "Item 15",
+    "Item 16",
+    "Item 17",
+    "Item 18",
+    "Item 19",
+    "Item 20"
+).toMutableStateList()
 
