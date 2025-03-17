@@ -60,22 +60,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.foodike.R
-import com.example.foodike.domain.model.Advertisement
-import com.example.foodike.domain.model.FoodItem
-import com.example.foodike.domain.model.Restaurant
 import com.example.foodike.presentation.components.DatePickerField
 import com.example.foodike.presentation.components.DragDropList
+import com.example.foodike.presentation.components.Drawing
 import com.example.foodike.presentation.components.RestaurantCard
 import com.example.foodike.presentation.components.SearchBar
 import com.example.foodike.presentation.components.move
@@ -89,6 +81,7 @@ import com.example.foodike.presentation.home.components.RecommendedSection
 import com.example.foodike.presentation.home.components.ThankYouSection
 import com.example.foodike.presentation.home.components.TopSection
 import com.example.foodike.presentation.util.Screen
+import com.example.foodike.ui.theme.DrawingCourseTheme
 import com.plcoding.composedraganddrop.DragAndDropBoxes
 import java.util.*
 
@@ -136,50 +129,53 @@ fun Home(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
+//        item {
+//            Spacer(modifier = Modifier.height(16.dp))
+//            DatePickerField()
+//        }
+//
+//        item {
+//            Spacer(modifier = Modifier.height(16.dp))
+//            TimePickerField()
+//        }
         item {
             Spacer(modifier = Modifier.height(16.dp))
-            DatePickerField()
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            TimePickerField()
-        }
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
+            DrawingCourseTheme{
+                Drawing()
+            }
 
            /// DragAndDropBoxes()
         }
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(color = Color.LightGray) {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Column(
-                            modifier = Modifier
-
-                                .background(MaterialTheme.colors.primary),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Drag & Drop List",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        }
-
-                        DragDropList(
-                            items = ReorderItem,
-                            onMove = { fromIndex, toIndex -> ReorderItem.move(fromIndex, toIndex) }
-                        )
-                    }
-                }
-
-        }
+//        item {
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//                Surface(color = Color.LightGray) {
+//                    Column(
+//                        modifier = Modifier.fillMaxSize()
+//                    ) {
+//                        Column(
+//                            modifier = Modifier
+//
+//                                .background(MaterialTheme.colors.primary),
+//                            horizontalAlignment = Alignment.CenterHorizontally,
+//                            verticalArrangement = Arrangement.Center
+//                        ) {
+//                            Text(
+//                                text = "Drag & Drop List",
+//                                fontSize = 20.sp,
+//                                fontWeight = FontWeight.Bold,
+//                                color = Color.White
+//                            )
+//                        }
+//
+//                        DragDropList(
+//                            items = ReorderItem,
+//                            onMove = { fromIndex, toIndex -> ReorderItem.move(fromIndex, toIndex) }
+//                        )
+//                    }
+//                }
+//
+//        }
         
 //        item {
 //            RecommendedSection(homeScreenState.foodList)

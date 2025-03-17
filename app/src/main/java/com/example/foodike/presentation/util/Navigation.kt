@@ -1,32 +1,11 @@
-/**
- *
- *	MIT License
- *
- *	Copyright (c) 2023 Gautam Hazarika
- *
- *	Permission is hereby granted, free of charge, to any person obtaining a copy
- *	of this software and associated documentation files (the "Software"), to deal
- *	in the Software without restriction, including without limitation the rights
- *	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *	copies of the Software, and to permit persons to whom the Software is
- *	furnished to do so, subject to the following conditions:
- *
- *	The above copyright notice and this permission notice shall be included in all
- *	copies or substantial portions of the Software.
- *
- *	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *	SOFTWARE.
- *
- **/
-
 package com.example.foodike.presentation.util
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -39,10 +18,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,6 +35,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.foodike.presentation.cart.Cart
 import com.example.foodike.presentation.common.SplashViewModel
 import com.example.foodike.presentation.components.SplashScreen
@@ -61,11 +44,14 @@ import com.example.foodike.presentation.history.History
 import com.example.foodike.presentation.home.Home
 import com.example.foodike.presentation.home.components.FoodikeBottomNavigation
 import com.example.foodike.presentation.login.LoginScreen
-import com.example.foodike.presentation.onboarding.OnBoarding
 import com.example.foodike.presentation.profile.Profile
 import com.example.foodike.presentation.tasks.Tareas
 import com.google.accompanist.pager.ExperimentalPagerApi
-
+import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
+import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_FORMAT_JPEG
+import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.SCANNER_MODE_FULL
+import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_FORMAT_PDF
+import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -146,6 +132,14 @@ fun SetupNavigation(startDestination: String) {
     val scrollState = rememberLazyListState()
     val state by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
 
+    val options = GmsDocumentScannerOptions.Builder()
+        .setGalleryImportAllowed(false)
+        .setPageLimit(5)
+        .setResultFormats(RESULT_FORMAT_JPEG, RESULT_FORMAT_PDF)
+        .setScannerMode(SCANNER_MODE_FULL)
+        .build()
+
+    val scanner = GmsDocumentScanning.getClient(options)
 
     Scaffold(
         bottomBar = {
@@ -155,16 +149,37 @@ fun SetupNavigation(startDestination: String) {
                     modifier = Modifier.padding(115.dp, 25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    val imagenUris = remember {
+                        mutableStateListOf<Uri>()
+                    }
+                    val scannerLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.StartActivityForResult(),
+                        onResult = {
 
+                        }
+                    )
                     Box(
                         contentAlignment = Alignment.Center
                     ) {
+                        imagenUris.forEach { uri ->
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                         BottomBar(navController = navController)
                         Column {
                             FloatingActionButton(
                                 onClick = {
-                                    navController.navigate(Screen.Cart.route)
-
+//                                    scanner.getStartScanIntent(Activity())
+//                                        .addOnSuccessListener { intent ->
+//                                            scannerLauncher.launch(intent)
+//                                        }
+//                                        .addOnFailureListener {
+//                                            println("Hubo un error: ${it.message}")
+//                                        }
                                 },
                                 backgroundColor = MaterialTheme.colors.primary
                             ) {
@@ -185,6 +200,7 @@ fun SetupNavigation(startDestination: String) {
         // SplashScreen(navController = navController)
     }
 }
+
 
 
 @Composable
