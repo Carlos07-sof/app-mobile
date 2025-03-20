@@ -2,7 +2,9 @@ package com.example.foodike.presentation.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.net.Uri
+import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,10 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -52,6 +57,12 @@ import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.SCANNER_MODE_FULL
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_FORMAT_PDF
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
+import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -128,6 +139,7 @@ fun SetupNavigation(startDestination: String) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val context = LocalContext.current
 
     val scrollState = rememberLazyListState()
     val state by remember { derivedStateOf { scrollState.firstVisibleItemIndex == 0 } }
@@ -149,15 +161,61 @@ fun SetupNavigation(startDestination: String) {
                     modifier = Modifier.padding(115.dp, 25.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val imagenUris = remember {
-                        mutableStateListOf<Uri>()
+                    var imagenUris by remember {
+                        mutableStateOf<List<Uri>>(emptyList())
                     }
                     val scannerLauncher = rememberLauncherForActivityResult(
-                        contract = ActivityResultContracts.StartActivityForResult(),
-                        onResult = {
+                        contract = ActivityResultContracts.StartIntentSenderForResult(),
+                        onResult = { result ->
+                            if (result.resultCode == RESULT_OK) {
+                                val scanResult = GmsDocumentScanningResult.fromActivityResultIntent(result.data)
+                                imagenUris = scanResult?.pages?.map { it.imageUri } ?: emptyList()
 
+                                scanResult?.pdf?.let { pdf ->
+                                    // Obtener la fecha actual
+                                    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                                    val currentDate = dateFormat.format(Date())
+
+                                    // Nombre del archivo con la fecha
+                                    val fileName = "scan_$currentDate.pdf"
+
+                                    // Directorio donde guardar el archivo
+                                    val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+                                    val pdfFile = File(storageDir, fileName)
+
+                                    try {
+                                        val fos = FileOutputStream(pdfFile)
+                                        context.contentResolver.openInputStream(pdf.uri)?.use { inputStream ->
+                                            inputStream.copyTo(fos)
+                                        }
+                                        fos.close()
+
+                                        println("Archivo guardado en: ${pdfFile.absolutePath}")
+                                    } catch (e: Exception) {
+                                        println("Error al guardar el archivo: ${e.message}")
+                                    }
+                                }
+                            }
                         }
                     )
+//                    val scannerLauncher = rememberLauncherForActivityResult(
+//                        contract = ActivityResultContracts.StartIntentSenderForResult(),
+//                        onResult = {
+//                            if (it.resultCode == RESULT_OK){
+//                                val result = GmsDocumentScanningResult.fromActivityResultIntent(it.data)
+//                                imagenUris = result?.pages?.map { it.imageUri } ?: emptyList()
+//
+//                                result?.pdf?.let { pdf ->
+//                                    val fos = FileOutputStream(File(context.filesDir,"scan.pdf"))
+//                                    context.contentResolver.openInputStream(pdf.uri)?.use {
+//                                        it.copyTo(fos)
+//                                    }
+//                                }
+//
+//
+//                            }
+//                        }
+//                    )
                     Box(
                         contentAlignment = Alignment.Center
                     ) {
@@ -173,13 +231,15 @@ fun SetupNavigation(startDestination: String) {
                         Column {
                             FloatingActionButton(
                                 onClick = {
-//                                    scanner.getStartScanIntent(Activity())
-//                                        .addOnSuccessListener { intent ->
-//                                            scannerLauncher.launch(intent)
-//                                        }
-//                                        .addOnFailureListener {
-//                                            println("Hubo un error: ${it.message}")
-//                                        }
+                                    scanner.getStartScanIntent(context as Activity)
+                                        .addOnSuccessListener {
+                                            scannerLauncher.launch(
+                                                IntentSenderRequest.Builder(it).build()
+                                            )
+                                        }
+                                        .addOnFailureListener {
+                                            println("Hubo un error: ${it.message}")
+                                        }
                                 },
                                 backgroundColor = MaterialTheme.colors.primary
                             ) {
