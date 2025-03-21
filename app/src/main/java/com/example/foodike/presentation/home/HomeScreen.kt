@@ -26,6 +26,7 @@
 
 package com.example.foodike.presentation.home
 
+import Imagen
 import TimePickerField
 import android.app.Activity
 import androidx.compose.foundation.Image
@@ -127,6 +128,10 @@ fun Home(
         item {
             AdSection(homeScreenState.adsList, navController)
             Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            AdSection(homeScreenState.adsList, navController)
+            Imagen()
         }
 
 //        item {
