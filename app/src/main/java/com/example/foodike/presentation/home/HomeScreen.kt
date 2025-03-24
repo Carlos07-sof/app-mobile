@@ -143,14 +143,14 @@ fun Home(
 //            Spacer(modifier = Modifier.height(16.dp))
 //            TimePickerField()
 //        }
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            DrawingCourseTheme{
-                Drawing()
-            }
-
-           /// DragAndDropBoxes()
-        }
+//        item {
+//            Spacer(modifier = Modifier.height(16.dp))
+//            DrawingCourseTheme{
+//                Drawing()
+//            }
+//
+//           //DragAndDropBoxes()
+//        }
 //        item {
 //            Spacer(modifier = Modifier.height(16.dp))
 //

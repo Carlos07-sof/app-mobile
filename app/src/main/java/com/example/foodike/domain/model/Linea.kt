@@ -9,5 +9,5 @@ data class Linea(
     val start: Offset,
     val end: Offset,
     val color: Color = Color.Black,
-    val strokeWidth: Dp = 1.dp
+    val strokeWidth: Dp = 4.dp
 )

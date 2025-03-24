@@ -1,4 +1,5 @@
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentUris
 import android.content.pm.PackageManager
@@ -8,6 +9,9 @@ import android.provider.MediaStore
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +25,7 @@ import coil.compose.AsyncImage
 import com.example.foodike.presentation.components.ImagenViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Imagen() {
     val viewModel: ImagenViewModel = viewModel()
@@ -85,20 +90,56 @@ fun Imagen() {
         }
     }
 
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        Text(
-            text = "Galería de Imágenes",
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = MaterialTheme.typography.headlineSmall
-        )
+    Scaffold(
+        floatingActionButton = {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                // Primer FloatingActionButton pequeño
+                FloatingActionButton(
+                    onClick = { /* Acción al hacer clic en el primero */ },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(50.dp) // Tamaño pequeño
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        contentDescription = "Agregar"
+                    )
+                }
 
+                // Segundo FloatingActionButton pequeño, desplazado un poco hacia arriba
+                FloatingActionButton(
+                    onClick = { /* Acción al hacer clic en el segundo */ },
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
+                    modifier = Modifier
+                        .padding(bottom = 70.dp) // Puedes ajustar la posición con padding
+                        .size(50.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Agregar más"
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
-                .heightIn(min = 20.dp, max = 100.dp)
-                .padding(8.dp)
+                .fillMaxSize()
+                .padding(innerPadding) // Respeta el padding del Scaffold
+                .padding(8.dp) // Padding extra
         ) {
+            item {
+                Text(
+                    text = "Galería de Imágenes",
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+
             items(images) { image ->
                 Column(
                     modifier = Modifier

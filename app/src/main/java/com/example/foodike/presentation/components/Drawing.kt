@@ -4,8 +4,11 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
@@ -16,21 +19,24 @@ fun Drawing() {
     val lines = remember {
         mutableStateListOf<Linea>()
     }
+    var recompositionTrigger by remember { mutableStateOf(0) }
 
     Canvas(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(true) {
-                detectDragGestures { change, dragAmount ->
-                    change.consume()
-
-                    val line = Linea(
-                        start = change.position - dragAmount,
-                        end = change.position
-                    )
-
-                    lines.add(line)
-                }
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        lines.add(
+                            Linea(
+                                start = change.position - dragAmount,
+                                end = change.position
+                            )
+                        )
+                        recompositionTrigger++
+                    }
+                )
             }
     ) {
         lines.forEach { line ->
