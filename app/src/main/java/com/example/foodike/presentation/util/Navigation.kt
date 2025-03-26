@@ -1,5 +1,6 @@
 package com.example.foodike.presentation.util
 
+import Imagen
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -43,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.foodike.presentation.cart.Cart
 import com.example.foodike.presentation.common.SplashViewModel
+import com.example.foodike.presentation.components.Permission
 import com.example.foodike.presentation.components.SplashScreen
 import com.example.foodike.presentation.details.RestaurantDetail
 import com.example.foodike.presentation.history.History
@@ -111,6 +113,11 @@ fun NavigationGraph(
             route = Screen.Tareas.route
         ){
             Tareas(navController = navController)
+        }
+        composable(
+            route = Screen.Permission.route
+        ){
+            Permission()
         }
 
 //        composable(
@@ -231,15 +238,16 @@ fun SetupNavigation(startDestination: String) {
                         Column {
                             FloatingActionButton(
                                 onClick = {
-                                    scanner.getStartScanIntent(context as Activity)
-                                        .addOnSuccessListener {
-                                            scannerLauncher.launch(
-                                                IntentSenderRequest.Builder(it).build()
-                                            )
-                                        }
-                                        .addOnFailureListener {
-                                            println("Hubo un error: ${it.message}")
-                                        }
+
+//                                    scanner.getStartScanIntent(context as Activity)
+//                                        .addOnSuccessListener {
+//                                            scannerLauncher.launch(
+//                                                IntentSenderRequest.Builder(it).build()
+//                                            )
+//                                        }
+//                                        .addOnFailureListener {
+//                                            println("Hubo un error: ${it.message}")
+//                                        }
                                 },
                                 backgroundColor = MaterialTheme.colors.primary
                             ) {

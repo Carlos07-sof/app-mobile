@@ -93,46 +93,51 @@ fun Home(
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current as Activity
+    Imagen()
 
-    context.window.statusBarColor = Color.Gray.toArgb()
-    context.window.navigationBarColor = Color.White.toArgb()
+//    val context = LocalContext.current as Activity
+//
+//    context.window.statusBarColor = Color.Gray.toArgb()
+//    context.window.navigationBarColor = Color.White.toArgb()
 
-    val homeScreenState by viewModel.homeScreenState
+//    val homeScreenState by viewModel.homeScreenState
 
-    LazyColumn(
-        modifier =
-        Modifier
-            .fillMaxWidth(),
-        state = scrollState,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-            TopSection(navController = navController)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            GreetingSection()
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-        item {
-            Column(
-                modifier = Modifier.padding(8.dp, 0.dp)
-            ) {
-                SearchBar()
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            AdSection(homeScreenState.adsList, navController)
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            AdSection(homeScreenState.adsList, navController)
-            Imagen()
-        }
+
+
+
+//    LazyColumn(
+//        modifier =
+//        Modifier
+//            .fillMaxWidth(),
+//        state = scrollState,
+//        verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.Start
+//    ) {
+//        item {
+//            Spacer(modifier = Modifier.height(8.dp))
+//            TopSection(navController = navController)
+//            Spacer(modifier = Modifier.height(8.dp))
+//        }
+//        item {
+//            GreetingSection()
+//            Spacer(modifier = Modifier.height(24.dp))
+//        }
+//        item {
+//            Column(
+//                modifier = Modifier.padding(8.dp, 0.dp)
+//            ) {
+//                SearchBar()
+//            }
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//        item {
+//            AdSection(homeScreenState.adsList, navController)
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//        item {
+//            //AdSection(homeScreenState.adsList, navController)
+//            //Imagen()
+//        }
 
 //        item {
 //            Spacer(modifier = Modifier.height(16.dp))
@@ -219,8 +224,8 @@ fun Home(
 //            ThankYouSection()
 //        }
 
-    }
-
+//    }
+//
 }
 
 
@@ -231,26 +236,26 @@ fun Home(
 
 
 
-val ReorderItem = listOf(
-    "Item 1",
-    "Item 2",
-    "Item 3",
-    "Item 4",
-    "Item 5",
-    "Item 6",
-    "Item 7",
-    "Item 8",
-    "Item 9",
-    "Item 10",
-    "Item 11",
-    "Item 12",
-    "Item 13",
-    "Item 14",
-    "Item 15",
-    "Item 16",
-    "Item 17",
-    "Item 18",
-    "Item 19",
-    "Item 20"
-).toMutableStateList()
+//val ReorderItem = listOf(
+//    "Item 1",
+//    "Item 2",
+//    "Item 3",
+//    "Item 4",
+//    "Item 5",
+//    "Item 6",
+//    "Item 7",
+//    "Item 8",
+//    "Item 9",
+//    "Item 10",
+//    "Item 11",
+//    "Item 12",
+//    "Item 13",
+//    "Item 14",
+//    "Item 15",
+//    "Item 16",
+//    "Item 17",
+//    "Item 18",
+//    "Item 19",
+//    "Item 20"
+//).toMutableStateList()
 

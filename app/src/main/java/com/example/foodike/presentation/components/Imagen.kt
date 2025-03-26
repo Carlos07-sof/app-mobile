@@ -21,8 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.foodike.presentation.components.ImagenViewModel
+import com.example.foodike.presentation.util.Screen
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -33,6 +36,8 @@ fun Imagen() {
     val context = LocalContext.current
     val activity = context as? Activity
     val coroutineScope = rememberCoroutineScope()
+
+    var navController: NavController? = null
 
     LaunchedEffect(Unit) {
         val permissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -98,7 +103,9 @@ fun Imagen() {
             ) {
                 // Primer FloatingActionButton pequeño
                 FloatingActionButton(
-                    onClick = { /* Acción al hacer clic en el primero */ },
+                    onClick = {
+                        navController?.navigate(Screen.Permission.route)
+                    },
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(50.dp) // Tamaño pequeño
@@ -109,7 +116,6 @@ fun Imagen() {
                     )
                 }
 
-                // Segundo FloatingActionButton pequeño, desplazado un poco hacia arriba
                 FloatingActionButton(
                     onClick = { /* Acción al hacer clic en el segundo */ },
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -125,35 +131,39 @@ fun Imagen() {
                 }
             }
         }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding) // Respeta el padding del Scaffold
-                .padding(8.dp) // Padding extra
+    ) {
+        Column(modifier = Modifier
+            .padding(30.dp)
         ) {
-            item {
-                Text(
-                    text = "Galería de Imágenes",
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = MaterialTheme.typography.headlineSmall
-                )
+            Text(
+                text = "Galerias de imagenes",
+                modifier = Modifier.padding(bottom = 8.dp),
+                style = MaterialTheme.typography.headlineSmall
+            )
+            LazyColumn (modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp))
+            {
+                items(images) { image ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .data(image.uri)
+                                .allowHardware(false)
+                                .build(),
+                            contentDescription = null
+                        )
+                        Text(text = image.name)
+                    }
+                }
+
             }
 
-            items(images) { image ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AsyncImage(
-                        model = image.uri,
-                        contentDescription = null
-                    )
-                    Text(text = image.name)
-                }
-            }
         }
     }
 }

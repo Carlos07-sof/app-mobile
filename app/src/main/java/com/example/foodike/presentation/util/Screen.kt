@@ -36,6 +36,7 @@ sealed class Screen(val route: String) {
     object Cart : Screen(route = "cart")
     object Profile : Screen(route = "profile")
     object RestaurantDetails:Screen(route = "restaurant_details")
+    object Permission:Screen(route = "permission")
 
     fun withArgs(vararg args: String): String {
         return buildString {
