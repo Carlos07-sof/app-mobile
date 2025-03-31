@@ -93,47 +93,45 @@ fun Home(
     navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    Imagen()
+    val context = LocalContext.current as Activity
 
-//    val context = LocalContext.current as Activity
-//
-//    context.window.statusBarColor = Color.Gray.toArgb()
-//    context.window.navigationBarColor = Color.White.toArgb()
+    context.window.statusBarColor = Color.Gray.toArgb()
+    context.window.navigationBarColor = Color.White.toArgb()
 
-//    val homeScreenState by viewModel.homeScreenState
+    val homeScreenState by viewModel.homeScreenState
 
 
 
 
-//    LazyColumn(
-//        modifier =
-//        Modifier
-//            .fillMaxWidth(),
-//        state = scrollState,
-//        verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.Start
-//    ) {
-//        item {
-//            Spacer(modifier = Modifier.height(8.dp))
-//            TopSection(navController = navController)
-//            Spacer(modifier = Modifier.height(8.dp))
-//        }
-//        item {
-//            GreetingSection()
-//            Spacer(modifier = Modifier.height(24.dp))
-//        }
-//        item {
-//            Column(
-//                modifier = Modifier.padding(8.dp, 0.dp)
-//            ) {
-//                SearchBar()
-//            }
-//            Spacer(modifier = Modifier.height(16.dp))
-//        }
-//        item {
-//            AdSection(homeScreenState.adsList, navController)
-//            Spacer(modifier = Modifier.height(16.dp))
-//        }
+    LazyColumn(
+        modifier =
+        Modifier
+            .fillMaxWidth(),
+        state = scrollState,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            TopSection(navController = navController)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        item {
+            GreetingSection()
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+        item {
+            Column(
+                modifier = Modifier.padding(8.dp, 0.dp)
+            ) {
+                SearchBar()
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        item {
+            AdSection(homeScreenState.adsList, navController)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 //        item {
 //            //AdSection(homeScreenState.adsList, navController)
 //            //Imagen()
@@ -224,8 +222,7 @@ fun Home(
 //            ThankYouSection()
 //        }
 
-//    }
-//
+    }
 }
 
 

@@ -11,11 +11,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -28,6 +30,7 @@ import com.example.foodike.presentation.components.ImagenViewModel
 import com.example.foodike.presentation.util.Screen
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Imagen() {
@@ -36,6 +39,8 @@ fun Imagen() {
     val context = LocalContext.current
     val activity = context as? Activity
     val coroutineScope = rememberCoroutineScope()
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     var navController: NavController? = null
 
@@ -96,75 +101,70 @@ fun Imagen() {
     }
 
     Scaffold(
-        floatingActionButton = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                // Primer FloatingActionButton pequeño
-                FloatingActionButton(
-                    onClick = {
-                        navController?.navigate(Screen.Permission.route)
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(50.dp) // Tamaño pequeño
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CameraAlt,
-                        contentDescription = "Agregar"
-                    )
-                }
-
-                FloatingActionButton(
-                    onClick = { /* Acción al hacer clic en el segundo */ },
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier
-                        .padding(bottom = 70.dp) // Puedes ajustar la posición con padding
-                        .size(50.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Agregar más"
-                    )
-                }
-            }
-        }
-    ) {
-        Column(modifier = Modifier
-            .padding(30.dp)
-        ) {
-            Text(
-                text = "Galerias de imagenes",
-                modifier = Modifier.padding(bottom = 8.dp),
-                style = MaterialTheme.typography.headlineSmall
-            )
-            LazyColumn (modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp))
-            {
-                items(images) { image ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .data(image.uri)
-                                .allowHardware(false)
-                                .build(),
-                            contentDescription = null
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Galeria") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController?.navigate(Screen.Archivos.route) {
+                            popUpTo(Screen.Archivos.route) { inclusive = true }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Regresar"
                         )
-                        Text(text = image.name)
+                    }
+                },
+                scrollBehavior = scrollBehavior,
+            )
+        }
+    ) { paddingValues ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(30.dp)
+            ) {
+                Text(
+                    text = "Galerias de imagenes",
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
+                {
+                    items(images) { image ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(context)
+                                    .data(image.uri)
+                                    .allowHardware(false)
+                                    .build(),
+                                contentDescription = null
+                            )
+                            Text(text = image.name)
+                        }
                     }
                 }
-
             }
-
         }
+
     }
 }
 

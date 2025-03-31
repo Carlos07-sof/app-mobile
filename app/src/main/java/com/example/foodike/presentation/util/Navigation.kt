@@ -2,12 +2,10 @@ package com.example.foodike.presentation.util
 
 import Imagen
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.net.Uri
 import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
@@ -21,11 +19,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,9 +38,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.foodike.presentation.Archivos.Vista.Archivos
+import com.example.foodike.presentation.Archivos.Vista.Documentos
+import com.example.foodike.presentation.Archivos.Vista.Permission
 import com.example.foodike.presentation.cart.Cart
 import com.example.foodike.presentation.common.SplashViewModel
-import com.example.foodike.presentation.components.Permission
 import com.example.foodike.presentation.components.SplashScreen
 import com.example.foodike.presentation.details.RestaurantDetail
 import com.example.foodike.presentation.history.History
@@ -115,10 +113,27 @@ fun NavigationGraph(
             Tareas(navController = navController)
         }
         composable(
+            route = Screen.Archivos.route
+        ){
+            Archivos(navController = navController)
+        }
+        composable(
             route = Screen.Permission.route
         ){
-            Permission()
+            Permission(navController = navController)
         }
+        composable(
+            route = Screen.Imagen.route
+        ){
+            Imagen()
+        }
+        composable(
+            route = Screen.Documentos.route
+        ){
+            Documentos(navController = navController)
+        }
+
+
 
 //        composable(
 //            route = Screen.Onboarding.route,

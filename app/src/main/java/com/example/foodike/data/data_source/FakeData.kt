@@ -689,18 +689,18 @@ val restaurantList = listOf(
 // Aqui se muestra los CARDS
 val adList = listOf(
     Advertisement(
-        title = "Tareas",
-//        subTitle = "Upto 20% discount for you",
-        color = Color(0xFF6200EE),
-        image = R.drawable.lista_todo,
-        rutas = "tareas"
-    ),
-    Advertisement(
         title = "Free delivery",
 //        subTitle = "Free delivery for selected restaurants",
         color = Color(0xFFDBE891),
         image = R.drawable.rider,
         rutas = "tareas"
+    ),
+    Advertisement(
+        title = "Archivos",
+//        subTitle = "Free delivery for selected restaurants",
+        color = Color(0xFFDBE891),
+        image = R.drawable.rider,
+        rutas = "archivos"
     ),
     Advertisement(
         title = "Order groceries",

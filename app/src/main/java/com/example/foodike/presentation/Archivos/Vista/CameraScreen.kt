@@ -1,4 +1,4 @@
-package com.example.foodike.presentation.components
+package com.example.foodike.presentation.Archivos.Vista
 
 import android.content.ContentValues
 import android.content.Context
@@ -36,49 +36,64 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
 
 @Composable
-fun Permission(){
-    val permission = listOf(
-        android.Manifest.permission.CAMERA
-    )
-    val isGranted = remember {
-        mutableStateOf(false)
-    }
-
+fun Permission(navController: NavController) {
+    val permission = listOf(android.Manifest.permission.CAMERA)
+    val isGranted = remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
-        onResult = {
-            permission ->
-            isGranted.value = permission[android.Manifest.permission.CAMERA] == true
+        onResult = { permissions ->
+            isGranted.value = permissions[android.Manifest.permission.CAMERA] == true
         }
     )
+    val imageCapture = remember {
+        ImageCapture.Builder().build()
+    }
+    val previewView : PreviewView = remember {
+        PreviewView(context)
+    }
 
-    if (isGranted.value){
-        CameraScreen()
-    }else{
-        Column(modifier = Modifier.fillMaxSize(),
+    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+    val preview = Preview.Builder().build()
+
+    LaunchedEffect (Unit) {
+        val cameraProvider = context.getCameraProvider()
+        cameraProvider.unbindAll()
+        cameraProvider.bindToLifecycle(
+            lifecycleOwner = lifecycleOwner,
+            cameraSelector = cameraSelector,
+            preview,
+            imageCapture
+        )
+        preview.setSurfaceProvider(previewView.surfaceProvider)
+    }
+
+    LaunchedEffect(Unit) {
+        launcher.launch(permission.toTypedArray())
+    }
+
+    if (isGranted.value) {
+        capturePhoto(imageCapture, context)
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            Button(
-                onClick = {
-                    launcher.launch(permission.toTypedArray())
-                }
-            ) {
-                Text(text = "Request")
-            }
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Se requiere permiso de la cámara")
         }
-
     }
 }
-
-
 
 @Composable
 fun CameraScreen() {
@@ -121,7 +136,7 @@ fun CameraScreen() {
             contentAlignment = Alignment.Center
         ){
             IconButton(
-                onClick = { capturePhoto(imageCapture, context)},
+                onClick = { capturePhoto(imageCapture, context) },
                 modifier = Modifier
                     .size(50.dp)
                     .background(Color.White, CircleShape)
@@ -174,3 +189,4 @@ private fun  capturePhoto(imageCapture: ImageCapture, context: Context){
         }
     )
 }
+
